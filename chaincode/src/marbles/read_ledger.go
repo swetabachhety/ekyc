@@ -158,7 +158,7 @@ func getHistory(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 		Value   Marble   `json:"value"`
 	}
 	var history []AuditHistory;
-	var marble Marble
+	//var marble Marble
 
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting 1")
@@ -227,7 +227,7 @@ func getMarblesByRange(stub shim.ChaincodeStubInterface, args []string) pb.Respo
 	var buffer bytes.Buffer
 	buffer.WriteString("[")
 
-	bArrayMemberAlreadyWritten := false
+	//bArrayMemberAlreadyWritten := false
 	//for resultsIterator.HasNext() {
 		//queryResultKey, queryResultValue, err := resultsIterator.Next()
 		//if err != nil {
