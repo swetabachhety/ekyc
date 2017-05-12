@@ -73,19 +73,19 @@ func main() {
 // Init - initialize the chaincode - marbles don’t need anything initlization, so let's run a dead simple test instead
 // ============================================================================================================================
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
-	fmt.Println("Marbles Is Starting Up")
+	fmt.Println("...........Marbles Is Starting Up")
 	_, args := stub.GetFunctionAndParameters()
 	var Aval int
 	var err error
 
 	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
+		return shim.Error("...........Incorrect number of arguments. Expecting 1")
 	}
 
 	// convert numeric string to integer
 	Aval, err = strconv.Atoi(args[0])
 	if err != nil {
-		return shim.Error("Expecting a numeric string argument to Init()")
+		return shim.Error(".............Expecting a numeric string argument to Init()")
 	}
 
 	// store compaitible marbles application version
@@ -100,7 +100,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 		return shim.Error(err.Error())                          //self-test fail
 	}
 
-	fmt.Println(" - ready for action")                          //self-test pass
+	fmt.Println(" - .........ready for action")                          //self-test pass
 	return shim.Success(nil)
 }
 
@@ -110,8 +110,8 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 // ============================================================================================================================
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	function, args := stub.GetFunctionAndParameters()
-	fmt.Println(" ")
-	fmt.Println("starting invoke, for - " + function)
+	fmt.Println("............ ")
+	fmt.Println("..........starting invoke, for - " + function)
 
 	// Handle different functions
 	if function == "init" {                    //initialize the chaincode state, used as reset
@@ -137,7 +137,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	}
 
 	// error out
-	fmt.Println("Received unknown invoke function name - " + function)
+	fmt.Println("............Received unknown invoke function name - " + function)
 	return shim.Error("Received unknown invoke function name - '" + function + "'")
 }
 

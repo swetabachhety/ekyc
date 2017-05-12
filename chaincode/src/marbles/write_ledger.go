@@ -42,10 +42,10 @@ import (
 func write(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var key, value string
 	var err error
-	fmt.Println("starting write")
+	fmt.Println("...........starting write")
 
 	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2. key of the variable and value to set")
+		return shim.Error("......Incorrect number of arguments. Expecting 2. key of the variable and value to set")
 	}
 
 	// input sanitation
@@ -61,7 +61,7 @@ func write(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 		return shim.Error(err.Error())
 	}
 
-	fmt.Println("- end write")
+	fmt.Println("- ..........end write")
 	return shim.Success(nil)
 }
 
@@ -76,10 +76,10 @@ func write(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 // "m999999999", "united marbles"
 // ============================================================================================================================
 func delete_marble(stub shim.ChaincodeStubInterface, args []string) (pb.Response) {
-	fmt.Println("starting delete_marble")
+	fmt.Println("......starting delete_marble")
 
 	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
+		return shim.Error("..........Incorrect number of arguments. Expecting 2")
 	}
 
 	// input sanitation
@@ -94,13 +94,13 @@ func delete_marble(stub shim.ChaincodeStubInterface, args []string) (pb.Response
 	// get the marble
 	marble, err := get_marble(stub, id)
 	if err != nil{
-		fmt.Println("Failed to find marble by id " + id)
+		fmt.Println("........Failed to find marble by id " + id)
 		return shim.Error(err.Error())
 	}
 
 	// check authorizing company (see note in set_owner() about how this is quirky)
 	if marble.Owner.Company != authed_by_company{
-		return shim.Error("The company '" + authed_by_company + "' cannot authorize deletion for '" + marble.Owner.Company + "'.")
+		return shim.Error(".........The company '" + authed_by_company + "' cannot authorize deletion for '" + marble.Owner.Company + "'.")
 	}
 
 	// remove the marble
@@ -109,7 +109,7 @@ func delete_marble(stub shim.ChaincodeStubInterface, args []string) (pb.Response
 		return shim.Error("Failed to delete state")
 	}
 
-	fmt.Println("- end delete_marble")
+	fmt.Println("-......... end delete_marble")
 	return shim.Success(nil)
 }
 
@@ -125,10 +125,10 @@ func delete_marble(stub shim.ChaincodeStubInterface, args []string) (pb.Response
 // ============================================================================================================================
 func init_marble(stub shim.ChaincodeStubInterface, args []string) (pb.Response) {
 	var err error
-	fmt.Println("starting init_marble")
+	fmt.Println("...starting init_marble")
 
 	if len(args) != 5 {
-		return shim.Error("Incorrect number of arguments. Expecting 5")
+		return shim.Error("........Incorrect number of arguments. Expecting 5")
 	}
 
 	//input sanitation
@@ -143,27 +143,27 @@ func init_marble(stub shim.ChaincodeStubInterface, args []string) (pb.Response) 
 	authed_by_company := args[4]
 	size, err := strconv.Atoi(args[2])
 	if err != nil {
-		return shim.Error("3rd argument must be a numeric string")
+		return shim.Error(".......3rd argument must be a numeric string")
 	}
 
 	//check if new owner exists
 	owner, err := get_owner(stub, owner_id)
 	if err != nil {
-		fmt.Println("Failed to find owner - " + owner_id)
+		fmt.Println(".........Failed to find owner - " + owner_id)
 		return shim.Error(err.Error())
 	}
 
 	//check authorizing company (see note in set_owner() about how this is quirky)
 	if owner.Company != authed_by_company{
-		return shim.Error("The company '" + authed_by_company + "' cannot authorize creation for '" + owner.Company + "'.")
+		return shim.Error(".........The company '" + authed_by_company + "' cannot authorize creation for '" + owner.Company + "'.")
 	}
 
 	//check if marble id already exists
 	marble, err := get_marble(stub, id)
 	if err == nil {
-		fmt.Println("This marble already exists - " + id)
+		fmt.Println("........This marble already exists - " + id)
 		fmt.Println(marble)
-		return shim.Error("This marble already exists - " + id)  //all stop a marble by this id exists
+		return shim.Error(".......This marble already exists - " + id)  //all stop a marble by this id exists
 	}
 
 	//build the marble json string manually
@@ -183,7 +183,7 @@ func init_marble(stub shim.ChaincodeStubInterface, args []string) (pb.Response) 
 		return shim.Error(err.Error())
 	}
 
-	fmt.Println("- end init_marble")
+	fmt.Println("- ......end init_marble")
 	return shim.Success(nil)
 }
 
@@ -199,10 +199,10 @@ func init_marble(stub shim.ChaincodeStubInterface, args []string) (pb.Response) 
 // ============================================================================================================================
 func init_owner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var err error
-	fmt.Println("starting init_owner")
+	fmt.Println("..........starting init_owner")
 
 	if len(args) != 3 {
-		return shim.Error("Incorrect number of arguments. Expecting 3")
+		return shim.Error(".........Incorrect number of arguments. Expecting 3")
 	}
 
 	//input sanitation
@@ -221,19 +221,19 @@ func init_owner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	//check if user already exists
 	_, err = get_owner(stub, owner.Id)
 	if err == nil {
-		fmt.Println("This owner already exists - " + owner.Id)
-		return shim.Error("This owner already exists - " + owner.Id)
+		fmt.Println(".....This owner already exists - " + owner.Id)
+		return shim.Error("..........This owner already exists - " + owner.Id)
 	}
 
 	//store user
 	ownerAsBytes, _ := json.Marshal(owner)                         //convert to array of bytes
 	err = stub.PutState(owner.Id, ownerAsBytes)                    //store owner by its Id
 	if err != nil {
-		fmt.Println("Could not store user")
+		fmt.Println(".........Could not store user")
 		return shim.Error(err.Error())
 	}
 
-	fmt.Println("- end init_owner marble")
+	fmt.Println("- ........end init_owner marble")
 	return shim.Success(nil)
 }
 
@@ -249,7 +249,7 @@ func init_owner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 // ============================================================================================================================
 func set_owner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var err error
-	fmt.Println("starting set_owner")
+	fmt.Println(".........starting set_owner")
 
 	// this is quirky
 	// todo - get the "company that authed the transfer" from the certificate instead of an argument
@@ -257,7 +257,7 @@ func set_owner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	// as is.. this is a bit broken (security wise), but it's much much easier to demo! holding off for demos sake
 
 	if len(args) != 3 {
-		return shim.Error("Incorrect number of arguments. Expecting 3")
+		return shim.Error("........Incorrect number of arguments. Expecting 3")
 	}
 
 	// input sanitation
@@ -274,20 +274,20 @@ func set_owner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	// check if user already exists
 	owner, err := get_owner(stub, new_owner_id)
 	if err != nil {
-		return shim.Error("This owner does not exist - " + new_owner_id)
+		return shim.Error("....This owner does not exist - " + new_owner_id)
 	}
 
 	// get marble's current state
 	marbleAsBytes, err := stub.GetState(marble_id)
 	if err != nil {
-		return shim.Error("Failed to get marble")
+		return shim.Error("........Failed to get marble")
 	}
 	res := Marble{}
 	json.Unmarshal(marbleAsBytes, &res)           //un stringify it aka JSON.parse()
 
 	// check authorizing company
 	if res.Owner.Company != authed_by_company{
-		return shim.Error("The company '" + authed_by_company + "' cannot authorize transfers for '" + res.Owner.Company + "'.")
+		return shim.Error("........The company '" + authed_by_company + "' cannot authorize transfers for '" + res.Owner.Company + "'.")
 	}
 
 	// transfer the marble
@@ -300,6 +300,6 @@ func set_owner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 		return shim.Error(err.Error())
 	}
 
-	fmt.Println("- end set owner")
+	fmt.Println("- .........end set owner")
 	return shim.Success(nil)
 }

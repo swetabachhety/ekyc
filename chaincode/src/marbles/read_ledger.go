@@ -43,10 +43,10 @@ import (
 func read(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var key, jsonResp string
 	var err error
-	fmt.Println("starting read")
+	fmt.Println(".......starting read")
 
 	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting key of the var to query")
+		return shim.Error("....Incorrect number of arguments. Expecting key of the var to query")
 	}
 
 	// input sanitation
@@ -62,7 +62,7 @@ func read(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 		return shim.Error(jsonResp)
 	}
 
-	fmt.Println("- end read")
+	fmt.Println("-............ end read")
 	return shim.Success(valAsbytes)                  //send it onward
 }
 
@@ -110,12 +110,12 @@ func read_everything(stub shim.ChaincodeStubInterface) pb.Response {
 			return shim.Error(err.Error())
 		}
 
-		fmt.Println("on marble id - ", queryKeyAsStr)
+		fmt.Println("...........on marble id - ", queryKeyAsStr)
 		var marble Marble
 		json.Unmarshal(queryValAsBytes, &marble)                  //un stringify it aka JSON.parse()
 		everything.Marbles = append(everything.Marbles, marble)   //add this marble to the list
 	}
-	fmt.Println("marble array - ", everything.Marbles)
+	fmt.Println("..........marble array - ", everything.Marbles)
 
 	// ---- Get All Owners ---- //
 	ownersIterator, err := stub.GetStateByRange("o0", "o9999999999999999999")
@@ -130,12 +130,12 @@ func read_everything(stub shim.ChaincodeStubInterface) pb.Response {
 			return shim.Error(err.Error())
 		}
 		
-		fmt.Println("on owner id - ", queryKeyAsStr)
+		fmt.Println("...........on owner id - ", queryKeyAsStr)
 		var owner Owner
 		json.Unmarshal(queryValAsBytes, &owner)                  //un stringify it aka JSON.parse()
 		everything.Owners = append(everything.Owners, owner)     //add this marble to the list
 	}
-	fmt.Println("owner array - ", everything.Owners)
+	fmt.Println("...........owner array - ", everything.Owners)
 
 	//change to array of bytes
 	everythingAsBytes, _ := json.Marshal(everything)             //convert to array of bytes
@@ -165,7 +165,7 @@ func getHistory(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	}
 
 	marbleId := args[0]
-	fmt.Printf("- start getHistoryForMarble: %s\n", marbleId)
+	fmt.Printf("- ........start getHistoryForMarble: %s\n", marbleId)
 
 	// Get History
 	resultsIterator, err := stub.GetHistoryForKey(marbleId)
@@ -192,7 +192,7 @@ func getHistory(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 		}
 		history = append(history, tx)              //add this tx to the list
 	}
-	fmt.Printf("- getHistoryForMarble returning:\n%s", history)
+	fmt.Printf("- ........getHistoryForMarble returning:\n%s", history)
 
 	//change to array of bytes
 	historyAsBytes, _ := json.Marshal(history)     //convert to array of bytes
@@ -211,7 +211,7 @@ func getHistory(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 // ============================================================================================================================
 func getMarblesByRange(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
+		return shim.Error("....Incorrect number of arguments. Expecting 2")
 	}
 
 	startKey := args[0]
@@ -250,7 +250,7 @@ func getMarblesByRange(stub shim.ChaincodeStubInterface, args []string) pb.Respo
 	}
 	buffer.WriteString("]")
 
-	fmt.Printf("- getMarblesByRange queryResult:\n%s\n", buffer.String())
+	fmt.Printf("- .....getMarblesByRange queryResult:\n%s\n", buffer.String())
 
 	return shim.Success(buffer.Bytes())
 }
