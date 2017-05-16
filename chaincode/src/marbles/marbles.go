@@ -73,7 +73,7 @@ func main() {
 // Init - initialize the chaincode - marbles don’t need anything initlization, so let's run a dead simple test instead
 // ============================================================================================================================
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
-	fmt.Println("...........Marbles Is Starting Up")
+	fmt.Println("...........eKYC verification system is Starting Up")
 	_, args := stub.GetFunctionAndParameters()
 	var Aval int
 	var err error

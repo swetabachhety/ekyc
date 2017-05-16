@@ -34,12 +34,12 @@ func get_marble(stub shim.ChaincodeStubInterface, id string) (Marble, error) {
 	var marble Marble
 	marbleAsBytes, err := stub.GetState(id)                  //getState retreives a key/value from the ledger
 	if err != nil {                                          //this seems to always succeed, even if key didn't exist
-		return marble, errors.New("......Failed to find marble - " + id)
+		return marble, errors.New("......Failed to find Aadhar Number - " + id)
 	}
 	json.Unmarshal(marbleAsBytes, &marble)                   //un stringify it aka JSON.parse()
 
 	if marble.Id != id {                                     //test if marble is actually here or just nil
-		return marble, errors.New(".....Marble does not exist - " + id)
+		return marble, errors.New(".....Aadhar Number does not exist - " + id)
 	}
 
 	return marble, nil
@@ -52,12 +52,12 @@ func get_owner(stub shim.ChaincodeStubInterface, id string) (Owner, error) {
 	var owner Owner
 	ownerAsBytes, err := stub.GetState(id)                     //getState retreives a key/value from the ledger
 	if err != nil {                                            //this seems to always succeed, even if key didn't exist
-		return owner, errors.New("........Failed to get owner - " + id)
+		return owner, errors.New("........Failed to get Financial Institution - " + id)
 	}
 	json.Unmarshal(ownerAsBytes, &owner)                       //un stringify it aka JSON.parse()
 
 	if len(owner.Username) == 0 {                              //test if owner is actually here or just nil
-		return owner, errors.New("......Owner does not exist - " + id + ", '" + owner.Username + "' '" + owner.Company + "'")
+		return owner, errors.New("......Financial Institution does not exist - " + id + ", '" + owner.Username + "' '" + owner.Company + "'")
 	}
 	
 	return owner, nil

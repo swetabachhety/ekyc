@@ -76,7 +76,7 @@ func write(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 // "m999999999", "united marbles"
 // ============================================================================================================================
 func delete_marble(stub shim.ChaincodeStubInterface, args []string) (pb.Response) {
-	fmt.Println("......starting delete_marble")
+	fmt.Println("......starting delete_aadhar_no")
 
 	if len(args) != 2 {
 		return shim.Error("..........Incorrect number of arguments. Expecting 2")
@@ -94,7 +94,7 @@ func delete_marble(stub shim.ChaincodeStubInterface, args []string) (pb.Response
 	// get the marble
 	marble, err := get_marble(stub, id)
 	if err != nil{
-		fmt.Println("........Failed to find marble by id " + id)
+		fmt.Println("........Failed to find Aadhar Number by id " + id)
 		return shim.Error(err.Error())
 	}
 
@@ -109,7 +109,7 @@ func delete_marble(stub shim.ChaincodeStubInterface, args []string) (pb.Response
 		return shim.Error("Failed to delete state")
 	}
 
-	fmt.Println("-......... end delete_marble")
+	fmt.Println("-......... end delete_Aadhar_Number")
 	return shim.Success(nil)
 }
 
@@ -125,7 +125,7 @@ func delete_marble(stub shim.ChaincodeStubInterface, args []string) (pb.Response
 // ============================================================================================================================
 func init_marble(stub shim.ChaincodeStubInterface, args []string) (pb.Response) {
 	var err error
-	fmt.Println("...starting init_marble")
+	fmt.Println("...starting init_Aadhar_Number")
 
 	if len(args) != 5 {
 		return shim.Error("........Incorrect number of arguments. Expecting 5")
@@ -161,9 +161,9 @@ func init_marble(stub shim.ChaincodeStubInterface, args []string) (pb.Response) 
 	//check if marble id already exists
 	marble, err := get_marble(stub, id)
 	if err == nil {
-		fmt.Println("........This marble already exists - " + id)
+		fmt.Println("........This Aadhar Number already exists - " + id)
 		fmt.Println(marble)
-		return shim.Error(".......This marble already exists - " + id)  //all stop a marble by this id exists
+		return shim.Error(".......This Aadhar Number already exists - " + id)  //all stop a marble by this id exists
 	}
 
 	//build the marble json string manually
@@ -199,7 +199,7 @@ func init_marble(stub shim.ChaincodeStubInterface, args []string) (pb.Response) 
 // ============================================================================================================================
 func init_owner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var err error
-	fmt.Println("..........starting init_owner")
+	fmt.Println("..........starting init_company")
 
 	if len(args) != 3 {
 		return shim.Error(".........Incorrect number of arguments. Expecting 3")
@@ -221,8 +221,8 @@ func init_owner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	//check if user already exists
 	_, err = get_owner(stub, owner.Id)
 	if err == nil {
-		fmt.Println(".....This owner already exists - " + owner.Id)
-		return shim.Error("..........This owner already exists - " + owner.Id)
+		fmt.Println(".....This company already exists - " + owner.Id)
+		return shim.Error("..........This company already exists - " + owner.Id)
 	}
 
 	//store user
@@ -233,7 +233,7 @@ func init_owner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 		return shim.Error(err.Error())
 	}
 
-	fmt.Println("- ........end init_owner marble")
+	fmt.Println("- ........end init_company")
 	return shim.Success(nil)
 }
 
@@ -249,7 +249,7 @@ func init_owner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 // ============================================================================================================================
 func set_owner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var err error
-	fmt.Println(".........starting set_owner")
+	fmt.Println(".........starting set_company")
 
 	// this is quirky
 	// todo - get the "company that authed the transfer" from the certificate instead of an argument
@@ -274,7 +274,7 @@ func set_owner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	// check if user already exists
 	owner, err := get_owner(stub, new_owner_id)
 	if err != nil {
-		return shim.Error("....This owner does not exist - " + new_owner_id)
+		return shim.Error("....This company does not exist - " + new_owner_id)
 	}
 
 	// get marble's current state
@@ -300,6 +300,6 @@ func set_owner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 		return shim.Error(err.Error())
 	}
 
-	fmt.Println("- .........end set owner")
+	fmt.Println("- .........end set company")
 	return shim.Success(nil)
 }
