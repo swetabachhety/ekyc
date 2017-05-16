@@ -178,8 +178,8 @@ func init_marble(stub shim.ChaincodeStubInterface, args []string) (pb.Response) 
 			"company": "` + owner.Company + `"
 		}
 	}`
-	err =                         //store marble with id as key
-	if err != nil {stub.PutState(id, []byte(str)) 
+	err = stub.PutState(id, []byte(str))                         //store marble with id as key
+	if err != nil {
 		return shim.Error(err.Error())
 	}
 
