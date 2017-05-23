@@ -66,7 +66,7 @@ type AllTrades struct{
 func main() {
 	err := shim.Start(new(SimpleChaincode))
 	if err != nil {
-		fmt.Printf("Error starting Simple chaincode: %s", err)
+		fmt.Printf("Error starting Simple chaincode ::: %s", err)
 	}
 }
 
@@ -78,13 +78,13 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	var err error
 
 	if len(args) != 1 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 1")
+		return nil, errors.New("Incorrect number of arguments....Expecting 1")
 	}
 
 	// Initialize the chaincode
 	Aval, err = strconv.Atoi(args[0])
 	if err != nil {
-		return nil, errors.New("Expecting integer value for asset holding")
+		return nil, errors.New("=========Expecting integer value for asset holding")
 	}
 
 	// Write the state to the ledger
@@ -114,7 +114,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 // Run - Our entry point for Invocations - [LEGACY] obc-peer 4/25/2016
 // ============================================================================================================================
 func (t *SimpleChaincode) Run(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	fmt.Println("run is running " + function)
+	fmt.Println("=======run is running " + function)
 	return t.Invoke(stub, function, args)
 }
 
@@ -122,7 +122,7 @@ func (t *SimpleChaincode) Run(stub shim.ChaincodeStubInterface, function string,
 // Invoke - Our entry point for Invocations
 // ============================================================================================================================
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	fmt.Println("invoke is running " + function)
+	fmt.Println("==========invoke is running " + function)
 
 	// Handle different functions
 	if function == "init" {													//initialize the chaincode state, used as reset
@@ -148,7 +148,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	} else if function == "remove_trade" {									//cancel an open trade order
 		return t.remove_trade(stub, args)
 	}
-	fmt.Println("invoke did not find func: " + function)					//error
+	fmt.Println("========invoke did not find func: " + function)					//error
 
 	return nil, errors.New("Received unknown function invocation")
 }
@@ -157,13 +157,13 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 // Query - Our entry point for Queries
 // ============================================================================================================================
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	fmt.Println("query is running " + function)
+	fmt.Println("=======query is running " + function)
 
 	// Handle different functions
 	if function == "read" {													//read a variable
 		return t.read(stub, args)
 	}
-	fmt.Println("query did not find func: " + function)						//error
+	fmt.Println("=======query did not find func: " + function)						//error
 
 	return nil, errors.New("Received unknown function query")
 }
@@ -213,7 +213,7 @@ func (t *SimpleChaincode) Delete(stub shim.ChaincodeStubInterface, args []string
 	
 	//remove marble from index
 	for i,val := range marbleIndex{
-		fmt.Println(strconv.Itoa(i) + " - looking at " + val + " for " + name)
+		fmt.Println(strconv.Itoa(i) + " -====== looking at " + val + " for " + name)
 		if val == name{															//find the correct marble
 			fmt.Println("found marble")
 			marbleIndex = append(marbleIndex[:i], marbleIndex[i+1:]...)			//remove it
@@ -237,7 +237,7 @@ func (t *SimpleChaincode) Write(stub shim.ChaincodeStubInterface, args []string)
 	fmt.Println("running write()")
 
 	if len(args) != 2 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the variable and value to set")
+		return nil, errors.New("=============Incorrect number of arguments. Expecting 2. name of the variable and value to set")
 	}
 
 	name = args[0]															//rename for funsies
@@ -258,7 +258,7 @@ func (t *SimpleChaincode) init_marble(stub shim.ChaincodeStubInterface, args []s
 	//   0       1       2     3
 	// "asdf", "blue", "35", "bob"
 	if len(args) != 4 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 4")
+		return nil, errors.New("========Incorrect number of arguments. Expecting 4")
 	}
 
 	//input sanitation
@@ -291,9 +291,9 @@ func (t *SimpleChaincode) init_marble(stub shim.ChaincodeStubInterface, args []s
 	res := Marble{}
 	json.Unmarshal(marbleAsBytes, &res)
 	if res.Name == name{
-		fmt.Println("This marble arleady exists: " + name)
+		fmt.Println("eKYC for this Aadhar number is arleady done: " + name)
 		fmt.Println(res);
-		return nil, errors.New("This marble arleady exists")				//all stop a marble by this name exists
+		return nil, errors.New("Aadhar number marble arleady exists")				//all stop a marble by this name exists
 	}
 	
 	//build the marble json string manually
@@ -317,7 +317,7 @@ func (t *SimpleChaincode) init_marble(stub shim.ChaincodeStubInterface, args []s
 	jsonAsBytes, _ := json.Marshal(marbleIndex)
 	err = stub.PutState(marbleIndexStr, jsonAsBytes)						//store name of marble
 
-	fmt.Println("- end init marble")
+	fmt.Println("-====== end init marble")
 	return nil, nil
 }
 
