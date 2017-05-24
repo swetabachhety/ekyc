@@ -241,7 +241,7 @@ func (t *SimpleChaincode) Write(stub shim.ChaincodeStubInterface, args []string)
 	}
 
 	aadharNum = args[0]															//rename for funsies
-	value = args[0]
+	value = args[1]
 	err = stub.PutState(aadharNum, []byte(value))								//write the variable into the chaincode state
 	if err != nil {
 		return nil, err
