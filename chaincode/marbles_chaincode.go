@@ -171,7 +171,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 // ============================================================================================================================
 // Read - read a variable from chaincode state
 // ============================================================================================================================
-func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) (valAsbytes []byte, err error) {
+func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	var aadharNum, jsonResp string
 	//var fail Ekyc;
 
@@ -189,13 +189,15 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	res := Ekyc{}
 	json.Unmarshal(infoAsBytes, &res)
 	
-	//valAsbytes = "{Financial Institue : " + res.User + " timestamp : " + res.Timestamp + " Size : " + res.Size+ "\"}"
+	var  valAsString string 
+	valAsString = "Financial Institue : " + res.User + " timestamp : " + strconv.FormatInt(res.Timestamp,16) + " Size : " + strconv.Itoa(res.Size)
+	//valAsbytes=res.User+".."+res.Timestamp
 	if err != nil {
 		jsonResp = "{\"Error\":\"Failed to get state for " + aadharNum + "\"}"
 		return nil, errors.New(jsonResp)
 	}
-
-	return infoAsBytes, nil													//send it onward
+      
+	return []byte(valAsString), nil													//send it onward
 }
 
 // ============================================================================================================================
