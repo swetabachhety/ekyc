@@ -274,7 +274,7 @@ func (t *SimpleChaincode) Write(stub shim.ChaincodeStubInterface, args []string)
 	var err error
 	fmt.Println("running write()")
 
-	if len(args) != 2 {
+	if len(args) != 3 {
 		return nil, errors.New("=============Incorrect number of arguments. Expecting 2. aadharNum of the variable and value to set")
 	}
 	
