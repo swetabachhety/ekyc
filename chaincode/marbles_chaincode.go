@@ -160,8 +160,9 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 	fmt.Println("=======query is running " + function)
 
 	// Handle different functions
-	if function == "read" {													//read a variable
-		//return t.read(stub, args)
+	if function == "read" {		
+		t.read(stub, args)	//read a variable
+		//return 
 	}
 	fmt.Println("=======query did not find func: " + function)						//error
 
@@ -171,12 +172,12 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 // ============================================================================================================================
 // Read - read a variable from chaincode state
 // ============================================================================================================================
-func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) (m Ekyc, err error) {
+func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) (valAsbytes []byte, err error) {
 	var aadharNum, jsonResp string
-	var fail Ekyc;
+	//var fail Ekyc;
 
 	if len(args) != 1 {
-		return fail, errors.New("Incorrect number of arguments. Expecting AadharNum to be queried")
+		return nil, errors.New("Incorrect number of arguments. Expecting AadharNum to be queried")
 	}
 
 	aadharNum = args[0]
@@ -184,18 +185,18 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	
 	infoAsBytes, err := stub.GetState(aadharNum)
 	if err != nil {
-		return fail, errors.New("Failed to get aadharNum")
+		return nil, errors.New("Failed to get aadharNum")
 	}
 	res := Ekyc{}
 	json.Unmarshal(infoAsBytes, &res)
 	
-	
+	//valAsbytes = "{Financial Institue : " + res.User + " timestamp : " + res.Timestamp + " Size : " + res.Size+ "\"}"
 	if err != nil {
 		jsonResp = "{\"Error\":\"Failed to get state for " + aadharNum + "\"}"
-		return fail, errors.New(jsonResp)
+		return nil, errors.New(jsonResp)
 	}
 
-	return res, nil													//send it onward
+	return infoAsBytes, nil													//send it onward
 }
 
 // ============================================================================================================================
