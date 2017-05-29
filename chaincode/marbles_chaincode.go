@@ -278,7 +278,7 @@ func (t *SimpleChaincode) Write(stub shim.ChaincodeStubInterface, args []string)
 	var err error
 	fmt.Println("running write()")
 
-	if len(args) != 3 {
+	if len(args) != 2 {
 		return nil, errors.New("=============Incorrect number of arguments. Expecting 2. aadharNum of the variable and value to set")
 	}
 	
@@ -294,7 +294,7 @@ func (t *SimpleChaincode) Write(stub shim.ChaincodeStubInterface, args []string)
 	
 	
 	aadharNum = args[0]															//rename for funsies
-	value = args[1] + "," + strconv.FormatInt(makeTimestamp(),16)
+	value = args[1] + "," + time.Now().Format(time.RFC850)
 	err = stub.PutState(aadharNum, []byte(value))								//write the variable into the chaincode state
 	
 	if err != nil {
