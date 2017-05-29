@@ -180,24 +180,26 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	}
 
 	aadharNum = args[0]
-	//valAsbytes, err := stub.GetState(aadharNum)									//get the var from chaincode state
+	valAsbytes, err := stub.GetState(aadharNum)									//get the var from chaincode state
 	
-	infoAsBytes, err := stub.GetState(aadharNum)
-	if err != nil {
-		return nil, errors.New("Failed to get aadharNum")
-	}
-	res := Ekyc{}
-	json.Unmarshal(infoAsBytes, &res)
+	//infoAsBytes, err := stub.GetState(aadharNum)
+	//if err != nil {
+	//	return nil, errors.New("Failed to get aadharNum")
+	//}
+	//res := Ekyc{}
+	//json.Unmarshal(infoAsBytes, &res)
 	
-	var  valAsString string 
-	valAsString = "Financial Institue : " + res.User + " timestamp : " + strconv.FormatInt(res.Timestamp,16) + " Size : " + strconv.Itoa(res.Size)
+	//var  valAsString string 
+	//valAsString = "Financial Institue : " + res.User + " timestamp : " + strconv.FormatInt(res.Timestamp,16) + " Size : " + //strconv.Itoa(res.Size)
 	//valAsbytes=res.User+".."+res.Timestamp
+	
 	if err != nil {
 		jsonResp = "{\"Error\":\"Failed to get state for " + aadharNum + "\"}"
 		return nil, errors.New(jsonResp)
 	}
-      
-	return []byte(valAsString), nil													//send it onward
+    return valAsbytes, nil	
+	
+	//return []byte(valAsString), nil													//send it onward
 }
 
 // ============================================================================================================================
@@ -272,7 +274,7 @@ func (t *SimpleChaincode) Delete(stub shim.ChaincodeStubInterface, args []string
 // Write - write variable into chaincode state
 // ============================================================================================================================
 func (t *SimpleChaincode) Write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	//var aadharNum, value string // Entities
+	var aadharNum, value string // Entities
 	var err error
 	fmt.Println("running write()")
 
@@ -280,20 +282,20 @@ func (t *SimpleChaincode) Write(stub shim.ChaincodeStubInterface, args []string)
 		return nil, errors.New("=============Incorrect number of arguments. Expecting 2. aadharNum of the variable and value to set")
 	}
 	
-	addEykc := Ekyc{}
-	addEykc.AadharNum = args[0]
-	addEykc.Timestamp = makeTimestamp()											//use timestamp as an ID
-	addEykc.User = args[1]
-	size, err := strconv.Atoi(args[2])
-	addEykc.Size= size
-	fmt.Println("- Perform Ekyc for aadhar Number")
-	jsonAsBytes, _ := json.Marshal(addEykc)
-	err = stub.PutState("aadharNum", jsonAsBytes)
+	//addEykc := Ekyc{}
+	//addEykc.AadharNum = args[0]
+	//addEykc.Timestamp = makeTimestamp()											//use timestamp as an ID
+	//addEykc.User = args[1]
+	//size, err := strconv.Atoi(args[2])
+	//addEykc.Size= size
+	//fmt.Println("- Perform Ekyc for aadhar Number")
+	//jsonAsBytes, _ := json.Marshal(addEykc)
+	//err = stub.PutState("aadharNum", jsonAsBytes)
 	
 	
-	//aadharNum = args[0]															//rename for funsies
-	//value = args[1]
-	//err = stub.PutState(aadharNum, []byte(value))								//write the variable into the chaincode state
+	aadharNum = args[0]															//rename for funsies
+	value = args[1] + "," + strconv.FormatInt(makeTimestamp(),16)
+	err = stub.PutState(aadharNum, []byte(value))								//write the variable into the chaincode state
 	
 	if err != nil {
 		return nil, err
