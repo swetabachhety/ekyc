@@ -95,6 +95,14 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 		return nil, err
 	}
 	
+	// Write the state to the ledger
+	var invokeArgs  string 
+	invokeArgs = "a"
+	err = stub.PutState("abc", []byte(invokeArgs))				
+	if err != nil {
+		return nil, err
+	}
+	
 	var emptyList []string
 	bankListAsBytes, _ := json.Marshal(emptyList)								//marshal an emtpy array of strings to clear the index
 	err = stub.PutState(bankIndexStr, bankListAsBytes)
