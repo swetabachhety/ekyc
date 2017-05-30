@@ -34,8 +34,10 @@ import (
 type SimpleChaincode struct {
 }
 
-var marbleIndexStr = "_marbleindex"				//name for the key/value that will store a list of all known marbles
+var marbleIndexStr = "_marbleindex"				//name for the key/value that will store a list of marbles
 var openTradesStr = "_opentrades"				//name for the key/value that will store all open trades
+
+var bankIndexStr = "_allBank"				//name for the key/value that will store a list of all added banks
 
 type Ekyc struct{								//the fieldtags are needed to keep case from bouncing around
 	AadharNum string `json:"aadharNum"`					//name is replaced with aadharNum
@@ -133,6 +135,8 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		return res, err
 	} else if function == "write" {											//writes a value to the chaincode state
 		return t.Write(stub, args)
+	} else if function == "writeBank" {											//writes a value to the chaincode state
+		return t.Write(stub, args)
 	} else if function == "init_marble" {									//create a new marble
 		return t.init_marble(stub, args)
 	} else if function == "set_user" {										//change owner of a marble
@@ -205,30 +209,39 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 // ============================================================================================================================
 // Read - read a variable from chaincode state
 // ============================================================================================================================
+func (t *SimpleChaincode) readBank(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	var bankName, jsonResp string
+	//var fail Ekyc;
+
+	if len(args) != 1 {
+		return nil, errors.New("Incorrect number of arguments. Expecting bankName to be queried")
+	}
+
+	bankName = args[0]
+	valAsbytes, err := stub.GetState(bankName)									//get the var from chaincode state
+	
+	if err != nil {
+		jsonResp = "{\"Error\":\"Failed to get state for " + bankName + "\"}"
+		return nil, errors.New(jsonResp)
+	}
+    return valAsbytes, nil	
+	
+}
+
+// ============================================================================================================================
+// Read - read a variable from chaincode state
+// ============================================================================================================================
 func (t *SimpleChaincode) readAll(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	//var aadharNum, jsonResp string
-	//var err error
+	var jsonResp string
 
-	//if len(args) != 1 {
-	//	return nil, errors.New("Incorrect number of arguments. Expecting AadharNum to be queried")
-	//}
-
-	//aadharNum = args[0]
-	//valAsbytes, err := stub.GetState()									//get the var from chaincode state
-	//if err != nil {
-	//	jsonResp = "{\"Error\":\"Failed to get state for " + aadharNum + "\"}"
-	//	return nil, errors.New(jsonResp)
-	//}
-// ---- Get All Marbles ---- //
-	//resultsIterator, err := stub.GetStateByRange("m0", "m9999999999999999999")
-	//if err != nil {
-	//	return shim.Error(err.Error())
-	//}
-//defer resultsIterator.Close()
-//change to array of bytes
-//everythingAsBytes, _ := json.Marshal(everything) 
-//	return everythingAsBytes, nil													//send it onward
-    return nil, nil
+	valAsbytes, err := stub.GetState(bankIndexStr)									//get the var from chaincode state
+	
+	if err != nil {
+		jsonResp = "{\"Error\":\"Failed to get state for list of registered banks \"}"
+		return nil, errors.New(jsonResp)
+	}
+    return valAsbytes, nil	
+	
 }
 
 // ============================================================================================================================
@@ -300,6 +313,43 @@ func (t *SimpleChaincode) Write(stub shim.ChaincodeStubInterface, args []string)
 	if err != nil {
 		return nil, err
 	}
+	return nil, nil
+}
+
+// ============================================================================================================================
+// Write - write Bank realated data into chaincode state
+// ============================================================================================================================
+func (t *SimpleChaincode) WriteBank(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	var bankName, value string // Entities
+	var err error
+	var err1 error
+	//var valAsbytes []byte
+	var valueAll string
+	fmt.Println("running writeBank()")
+
+	if len(args) != 2 {
+		return nil, errors.New("=============Incorrect number of arguments. Expecting 2. aadharNum of the variable and value to set")
+	}	
+	
+	bankName = args[0]															//rename for funsies
+	value = args[1] + ";" + args[2] + ";" + args[3] + ";" + args[4] 
+	err = stub.PutState(bankName, []byte(value))								//write the variable into the chaincode state
+	
+	if err != nil {
+		return nil, err
+	}
+	
+	valAsbytes, errr := t.readAll(stub, args)
+	if errr != nil {
+		return nil, errr
+	}
+																
+	valueAll = string(valAsbytes) + ";" + args[0]
+	err1 = stub.PutState(bankIndexStr, []byte(valueAll))	
+	if err1 != nil {
+		return nil, err
+	}
+	
 	return nil, nil
 }
 
