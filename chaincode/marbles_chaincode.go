@@ -165,7 +165,11 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 
 	// Handle different functions
 	if function == "read" {		
-		return t.read(stub, args)	//read a variable
+		return t.read(stub, args)	//read a KYC
+	}else if function == "readBank" {		
+		return t.readBank(stub, args)	//read a Bank details
+	}else if function == "readAll" {		
+		return t.readAll(stub, args)	//read list of registered Banks
 	}
 	fmt.Println("=======query did not find func: " + function)						//error
 
