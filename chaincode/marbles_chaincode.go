@@ -136,7 +136,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	} else if function == "write" {											//writes a value to the chaincode state
 		return t.Write(stub, args)
 	} else if function == "writeBank" {											//writes a value to the chaincode state
-		return t.Write(stub, args)
+		return t.WriteBank(stub, args)
 	} else if function == "init_marble" {									//create a new marble
 		return t.init_marble(stub, args)
 	} else if function == "set_user" {										//change owner of a marble
