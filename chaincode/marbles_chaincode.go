@@ -90,7 +90,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	}
 
 	// Write the state to the ledger
-	err = stub.PutState("abc", []byte(strconv.Itoa(Aval)))				//making a test var "abc", I find it handy to read/write to it right away to test the network
+	err = stub.PutState("kyc", []byte(strconv.Itoa(Aval)))				//making a test var "abc", I find it handy to read/write to it right away to test the network
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	// Write the state to the ledger
 	var invokeArgs  string 
 	invokeArgs = "a"
-	err = stub.PutState("abc", []byte(invokeArgs))				
+	err = stub.PutState("bank", []byte(invokeArgs))				
 	if err != nil {
 		return nil, err
 	}
@@ -324,8 +324,7 @@ func (t *SimpleChaincode) Write(stub shim.ChaincodeStubInterface, args []string)
 	//jsonAsBytes, _ := json.Marshal(addEykc)
 	//err = stub.PutState("aadharNum", jsonAsBytes)
 	
-	
-	aadharNum = args[0]															//rename for funsies
+	aadharNum = args[0]															
 	value = args[1] + ";" + time.Now().Format(time.RFC850)
 	err = stub.PutState(aadharNum, []byte(value))								//write the variable into the chaincode state
 	
@@ -346,12 +345,12 @@ func (t *SimpleChaincode) WriteBank(stub shim.ChaincodeStubInterface, args []str
 	var valueAll string
 	fmt.Println("running writeBank()")
 
-	if len(args) != 2 {
+	if len(args) != 4 {
 		return nil, errors.New("=============Incorrect number of arguments. Expecting 2. aadharNum of the variable and value to set")
 	}	
 	
-	bankName = args[0]															//rename for funsies
-	value = args[1] + ";" + args[2] + ";" + args[3] + ";" + args[4] 
+	bankName = args[0]															
+	value = args[1] + ";" + args[2] + ";" + args[3] 
 	err = stub.PutState(bankName, []byte(value))								//write the variable into the chaincode state
 	
 	if err != nil {
